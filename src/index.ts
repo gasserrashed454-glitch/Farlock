@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits, Events } from "discord.js";
+import { createServer } from "http";
 
 const client = new Client({
   intents: [
@@ -23,3 +24,12 @@ if (!token) {
 }
 
 client.login(token);
+
+// Keep-alive HTTP server so Render doesn't loop waiting for an open port
+const PORT = process.env.PORT || 3000;
+createServer((_, res) => {
+  res.writeHead(200);
+  res.end("OK");
+}).listen(PORT, () => {
+  console.log(`Health check server listening on port ${PORT}`);
+});
